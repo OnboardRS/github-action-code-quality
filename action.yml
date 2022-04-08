@@ -1,0 +1,52 @@
+name: 'Code Quality'
+description: 'Combined quality checks. Runs tests, runs ReSharper inspect and cleanup code.'
+inputs:
+  solutionPath:
+    required: true
+    description: 'The solution file.'
+  profilePath:
+    required: true
+    description: 'The DotSettings profile to run against the profiler.'
+  codingStandardsRepo:
+    required: true
+    description: 'The coding standards repo to copy .editorconfig and DotSettings from.'
+  gitHubToken: 
+    required: true
+    description: 'The personal access token for github to check in with. Cannot be default PAT or checkin will not occur.'
+outputs:
+    hadChanges: 
+      description: "Value for if the cleanup check had changes or not. yarp for true, narp for false. Case sensitive."
+      value: ${{ steps.resharper-cleanup-code-result.outputs.hadChanges }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout Coding Standards
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ inputs.codingStandardsRepo }}
+        token: ${{ inputs.gitHubToken }}
+        path: coding-standards
+    - name: Copy Standards Files
+      shell: bash
+      run: |
+        cp ./coding-standards/C#/.editorconfig ./.editorConfig -f
+        cp ./coding-standards/C#/.DotSettings ./${{ inputs.solutionPath }}.sln.DotSettings -f
+        cp ./coding-standards/C#/localQualityChecks.ps1 ./localQualityChecks.ps1 -f        
+        cp ./coding-standards/C#/localQualityChecks.sh ./localQualityChecks.sh -f        
+    - name: Test
+      run: |
+        dotnet test --no-restore --verbosity normal
+    - name: ReSharper CLI InspectCode
+      uses: OnboardRS/github-action-resharper-inspect-code@1.0.0
+      with:
+        solutionPath: ${{ inputs.solutionPath }}
+        minimumFailSeverity: warning
+        failOnIssue: 1
+        minimumReportSeverity: warning
+    - name: ReSharper CLI CleanupCode
+      uses: OnboardRS/github-action-resharper-cleanup-code@0.0.3
+      with:
+        solutionPath:  ${{ inputs.solutionPath }}
+        profilePath: ${{ inputs.profilePath }}
+        gitHubToken: ${{ inputs.gitHubToken }}
+    

@@ -22,7 +22,6 @@ runs:
   steps:
     - name: Checkout Coding Standards
       uses: actions/checkout@v3
-      shell: bash
       with:
         repository: ${{ inputs.codingStandardsRepo }}
         token: ${{ inputs.gitHubToken }}
@@ -40,7 +39,6 @@ runs:
         dotnet test --no-restore --verbosity normal
     - name: ReSharper CLI InspectCode
       uses: OnboardRS/github-action-resharper-inspect-code@1.0.0
-      shell: bash
       with:
         solutionPath: ${{ inputs.solutionPath }}
         minimumFailSeverity: warning
@@ -48,7 +46,6 @@ runs:
         minimumReportSeverity: warning
     - name: ReSharper CLI CleanupCode
       uses: OnboardRS/github-action-resharper-cleanup-code@0.0.3
-      shell: bash
       with:
         solutionPath:  ${{ inputs.solutionPath }}
         profilePath: ${{ inputs.profilePath }}

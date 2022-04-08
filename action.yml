@@ -16,7 +16,7 @@ inputs:
 outputs:
     hadChanges: 
       description: "Value for if the cleanup check had changes or not. yarp for true, narp for false. Case sensitive."
-      value: ${{ steps.resharper-cleanup-code-result.outputs.hadChanges }}
+      value: ${{ steps.resharper-cleanup-code.outputs.hadChanges }}
 runs:
   using: 'composite'
   steps:
@@ -45,7 +45,8 @@ runs:
         failOnIssue: 1
         minimumReportSeverity: warning
     - name: ReSharper CLI CleanupCode
-      uses: OnboardRS/github-action-resharper-cleanup-code@0.0.3
+      id: resharper-cleanup-code
+      uses: OnboardRS/github-action-resharper-cleanup-code@0.0.5
       with:
         solutionPath:  ${{ inputs.solutionPath }}
         profilePath: ${{ inputs.profilePath }}

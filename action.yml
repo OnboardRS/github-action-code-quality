@@ -46,7 +46,7 @@ runs:
         minimumReportSeverity: warning
     - name: ReSharper CLI CleanupCode
       id: resharper-cleanup-code
-      uses: OnboardRS/github-action-resharper-cleanup-code@0.0.5
+      uses: OnboardRS/github-action-resharper-cleanup-code@0.0.6
       with:
         solutionPath:  ${{ inputs.solutionPath }}
         profilePath: ${{ inputs.profilePath }}
@@ -54,7 +54,6 @@ runs:
     - name: Set Output code-quality
       id: resharper-cleanup-code-result
       shell: bash
-      run: |
-        echo "::set-output name=hadChanges::$(echo ${{ steps.resharper-cleanup-code.outputs.hadChanges.value }})"
+      run: echo "::set-output name=hadChanges::${{ steps.resharper-cleanup-code.outputs.hadChanges }})"
         
     

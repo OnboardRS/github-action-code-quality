@@ -16,7 +16,7 @@ inputs:
 outputs:
     hadChanges: 
       description: "Value for if the cleanup check had changes or not. yarp for true, narp for false. Case sensitive."
-      value: ${{ steps.resharper-cleanup-code.outputs.hadChanges }}
+      value: ${{ steps.resharper-cleanup-code-result.outputs.hadChanges }}
 runs:
   using: 'composite'
   steps:
@@ -51,4 +51,10 @@ runs:
         solutionPath:  ${{ inputs.solutionPath }}
         profilePath: ${{ inputs.profilePath }}
         gitHubToken: ${{ inputs.gitHubToken }}
+    - name: Set Output code-quality
+      id: resharper-cleanup-code-result
+      shell: bash
+      run: |
+        echo "::set-output name=hadChanges::$(echo ${{ steps.resharper-cleanup-code.outputs.hadChanges }})"
+        
     

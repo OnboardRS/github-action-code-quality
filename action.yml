@@ -1,22 +1,15 @@
-name: 'Code Quality'
-description: 'Combined quality checks. Runs tests, runs ReSharper inspect and cleanup code.'
+name: 'Code Quality Config'
+description: 'Combined quality configuration. Copies standards files to repo.'
 inputs:
   solutionPath:
     required: true
     description: 'The solution file.'
-  profilePath:
-    required: true
-    description: 'The DotSettings profile to run against the profiler.'
   codingStandardsRepo:
     required: true
     description: 'The coding standards repo to copy .editorconfig and DotSettings from.'
   gitHubToken: 
     required: true
     description: 'The personal access token for github to check in with. Cannot be default PAT or checkin will not occur.'
-outputs:
-    hadChanges: 
-      description: "Value for if the cleanup check had changes or not. yarp for true, narp for false. Case sensitive."
-      value: ${{ steps.resharper-cleanup-code-result.outputs.hadChanges }}
 runs:
   using: 'composite'
   steps:
@@ -29,31 +22,78 @@ runs:
     - name: Copy Standards Files
       shell: bash
       run: |
+        cp ./coding-standards/C#/.gitattributes ./nuget.config -f
+        cp ./coding-standards/C#/.gitattributes ./.gitattributes -f
         cp ./coding-standards/C#/.editorconfig ./.editorConfig -f
         cp ./coding-standards/C#/.DotSettings ./${{ inputs.solutionPath }}.sln.DotSettings -f
         cp ./coding-standards/C#/localQualityChecks.ps1 ./localQualityChecks.ps1 -f        
-        cp ./coding-standards/C#/localQualityChecks.sh ./localQualityChecks.sh -f        
-    - name: Test
+        cp ./coding-standards/C#/localQualityChecks.sh ./localQualityChecks.sh -f
+    - name: Ensure Files Are Git Tracked
       shell: bash
       run: |
-        dotnet test --no-restore --verbosity normal
-    - name: ReSharper CLI InspectCode
-      uses: OnboardRS/github-action-resharper-inspect-code@1.0.0
-      with:
-        solutionPath: ${{ inputs.solutionPath }}
-        minimumFailSeverity: warning
-        failOnIssue: 1
-        minimumReportSeverity: warning
-    - name: ReSharper CLI CleanupCode
-      id: resharper-cleanup-code
-      uses: OnboardRS/github-action-resharper-cleanup-code@0.0.6
-      with:
-        solutionPath:  ${{ inputs.solutionPath }}
-        profilePath: ${{ inputs.profilePath }}
-        gitHubToken: ${{ inputs.gitHubToken }}
-    - name: Set Output code-quality
-      id: resharper-cleanup-code-result
+        ./coding-standards/helper-scripts/ensureGitTracked.sh ./.nuget.config
+        ./coding-standards/helper-scripts/ensureGitTracked.sh ./.gitattributes
+        ./coding-standards/helper-scripts/ensureGitTracked.sh ./.editorConfig
+        ./coding-standards/helper-scripts/ensureGitTracked.sh ./${{ inputs.solutionPath }}.sln.DotSettings
+        ./coding-standards/helper-scripts/ensureGitTracked.sh ./localQualityChecks.ps1
+        ./coding-standards/helper-scripts/ensureGitTracked.sh ./localQualityChecks.sh
+    - name: Ensure Git Ignore Contents
       shell: bash
-      run: echo "::set-output name=hadChanges::${{ steps.resharper-cleanup-code.outputs.hadChanges }})"
+      run: |
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Dd]ebug/' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Dd]ebugPublic/' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Rr]elease/' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Rr]eleases/' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh 'x64/' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh 'x86/' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Aa][Rr][Mm]/' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Aa][Rr][Mm]64/' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh 'bld/' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Bb]in/' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Oo]bj/' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Ll]og/' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Ll]ogs/' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '.vs/' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '.vscode' ./.gitignore 
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '.DotSettings.user' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.rsuser' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.suo' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.user' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.userosscache' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.sln.docstates' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '.idea/' ./.gitignore
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '.idea/' ./.gitignore        
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.launchSettings.json' ./.gitignore
+    - name: Check for Modifications
+      shell: bash
+      run: |
+        git status &> git_changes.txt
+    - name: ReSharper CLI CleanupCode - Modification Validation
+      shell: bash
+      run: |
+        if grep -Fq "modified:" git_changes.txt
+        then
+          echo "CLEANUP_CHANGES=yarp" >> $GITHUB_ENV
+        else
+          echo "CLEANUP_CHANGES=narp" >> $GITHUB_ENV
+        fi
+    - name: Set GITHUB_TOKEN from parameter.
+      shell: bash
+      run: |
+         echo "GITHUB_TOKEN=${{ inputs.gitHubToken }}" >> $GITHUB_ENV
+    - name: Check if Re-Commit Required
+      if: env.CLEANUP_CHANGES == 'yarp'
+      shell: bash
+      run: |
+        rm git_changes.txt
+        git config --global user.name "Build Action"
+        git config --global user.email "build@letsonboard.com"
+        git commit -am "Automated standards file update."
+        git push        
+    - name: No Changes
+      if: env.CLEANUP_CHANGES == 'narp'
+      shell: bash
+      run: |
+        echo "No changes detected."
         
     

@@ -22,7 +22,7 @@ runs:
     - name: Copy Standards Files
       shell: bash
       run: |
-        cp ./coding-standards/C#/.gitattributes ./nuget.config -f
+        cp ./coding-standards/C#/nuget.config ./nuget.config -f
         cp ./coding-standards/C#/.gitattributes ./.gitattributes -f
         cp ./coding-standards/C#/.editorconfig ./.editorConfig -f
         cp ./coding-standards/C#/.DotSettings ./${{ inputs.solutionPath }}.sln.DotSettings -f
@@ -31,7 +31,7 @@ runs:
     - name: Ensure Files Are Git Tracked
       shell: bash
       run: |
-        ./coding-standards/helper-scripts/ensureGitTracked.sh ./.nuget.config
+        ./coding-standards/helper-scripts/ensureGitTracked.sh ./nuget.config
         ./coding-standards/helper-scripts/ensureGitTracked.sh ./.gitattributes
         ./coding-standards/helper-scripts/ensureGitTracked.sh ./.editorConfig
         ./coding-standards/helper-scripts/ensureGitTracked.sh ./${{ inputs.solutionPath }}.sln.DotSettings

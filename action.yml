@@ -23,6 +23,7 @@ runs:
       shell: bash
       run: |
         pwd
+        ls -al
         cp ./coding-standards/C#/nuget.config ./nuget.config -f
         cp ./coding-standards/C#/.gitattributes ./.gitattributes -f
         cp ./coding-standards/C#/.editorconfig ./.editorConfig -f

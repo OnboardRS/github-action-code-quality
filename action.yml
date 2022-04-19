@@ -18,7 +18,7 @@ runs:
       with:
         repository: ${{ inputs.codingStandardsRepo }}
         token: ${{ inputs.gitHubToken }}
-        path: coding-standards
+        path: ./coding-standards
     - name: Copy Standards Files
       shell: bash
       run: |

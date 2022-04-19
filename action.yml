@@ -24,6 +24,7 @@ runs:
       run: |
         pwd
         ls -al
+        ls -al ./coding-standards
         cp ./coding-standards/C#/nuget.config ./nuget.config -f
         cp ./coding-standards/C#/.gitattributes ./.gitattributes -f
         cp ./coding-standards/C#/.editorconfig ./.editorConfig -f

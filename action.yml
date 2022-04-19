@@ -22,6 +22,7 @@ runs:
     - name: Copy Standards Files
       shell: bash
       run: |
+        pwd
         cp ./coding-standards/C#/nuget.config ./nuget.config -f
         cp ./coding-standards/C#/.gitattributes ./.gitattributes -f
         cp ./coding-standards/C#/.editorconfig ./.editorConfig -f

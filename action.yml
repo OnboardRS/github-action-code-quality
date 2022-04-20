@@ -115,9 +115,5 @@ runs:
       shell: bash
       run: |
         echo "No changes detected."
-    - name: SED Nuget Config After Overwrite
-      shell: bash
-      run: |
-        sed -i -e "s/ACTOR/${{ github.actor }}/g" -e "s/TOKEN/${{ secrets.ARTIFACT_SERVICE_TOKEN }}/g" nuget.config 
         
     

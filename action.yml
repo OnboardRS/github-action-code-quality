@@ -73,6 +73,7 @@ runs:
     - name: Ensure Git Ignore Contents
       shell: bash
       run: |
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh 'localQualityCheckResult.xml' ./.gitignore
         ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Dd]ebug/' ./.gitignore
         ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Dd]ebugPublic/' ./.gitignore
         ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Rr]elease/' ./.gitignore

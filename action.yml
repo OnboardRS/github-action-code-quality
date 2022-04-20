@@ -10,6 +10,12 @@ inputs:
   gitHubToken: 
     required: true
     description: 'The personal access token for github to check in with. Cannot be default PAT or checkin will not occur.'
+  gitHubActor: 
+    required: true
+    description: 'The nuget.config actor for nuget update.'
+  gitHubArtifactToken: 
+    required: true
+    description: 'The personal access token for github to pull org nuget packages.'
 runs:
   using: 'composite'
   steps:
@@ -115,5 +121,9 @@ runs:
       shell: bash
       run: |
         echo "No changes detected."
+    - name: SED Nuget Config After Overwrite
+      shell: bash
+      run: |
+        sed -i -e "s/ACTOR/${{ inputs.gitHubActor }}/g" -e "s/TOKEN/${{ inputs.gitHubArtifactToken }}/g" nuget.config 
         
     

@@ -34,13 +34,34 @@ runs:
         cp ./coding-standards/C#/.DotSettings ./${{ inputs.solutionPath }}.sln.DotSettings -f
         cp ./coding-standards/C#/localQualityChecks.ps1 ./localQualityChecks.ps1 -f        
         cp ./coding-standards/C#/localQualityChecks.sh ./localQualityChecks.sh -f
+    - name: Copy Standards Files
+      shell: bash
+      run: |
+        echo pwd
+        pwd
+        echo ls -al
+        ls -al
+        echo ls -al ./coding-standards
+        ls -al ./coding-standards
+        cp ./coding-standards/.gitattributes ./.gitattributes -f
+        cp ./coding-standards/C#/nuget.config ./nuget.config -f        
+        cp ./coding-standards/C#/.editorconfig ./.editorConfig -f
+        cp ./coding-standards/C#/.DotSettings ${{ inputs.solutionPath }}.DotSettings -f
+        cp ./coding-standards/C#/localQualityChecks.ps1 ./localQualityChecks.ps1 -f        
+        cp ./coding-standards/C#/localQualityChecks.sh ./localQualityChecks.sh -f
+    - name: Git Configure
+      shell: bash
+      run: |
+        echo "GITHUB_TOKEN=${{ inputs.gitHubToken }}" >> $GITHUB_ENV
+        git config --global user.name "Build Action"
+        git config --global user.email "build@letsonboard.com"
     - name: Ensure Files Are Git Tracked
       shell: bash
       run: |
         ./coding-standards/helper-scripts/ensureGitTracked.sh ./nuget.config
         ./coding-standards/helper-scripts/ensureGitTracked.sh ./.gitattributes
         ./coding-standards/helper-scripts/ensureGitTracked.sh ./.editorConfig
-        ./coding-standards/helper-scripts/ensureGitTracked.sh ./${{ inputs.solutionPath }}.sln.DotSettings
+        ./coding-standards/helper-scripts/ensureGitTracked.sh ${{ inputs.solutionPath }}.DotSettings
         ./coding-standards/helper-scripts/ensureGitTracked.sh ./localQualityChecks.ps1
         ./coding-standards/helper-scripts/ensureGitTracked.sh ./localQualityChecks.sh
     - name: Ensure Git Ignore Contents
@@ -60,14 +81,13 @@ runs:
         ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Ll]og/' ./.gitignore
         ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Ll]ogs/' ./.gitignore
         ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '.vs/' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '.vscode' ./.gitignore 
+        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '.vscode/' ./.gitignore 
         ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '.DotSettings.user' ./.gitignore
         ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.rsuser' ./.gitignore
         ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.suo' ./.gitignore
         ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.user' ./.gitignore
         ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.userosscache' ./.gitignore
         ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.sln.docstates' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '.idea/' ./.gitignore
         ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '.idea/' ./.gitignore        
         ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.launchSettings.json' ./.gitignore
     - name: Check for Modifications
@@ -83,17 +103,11 @@ runs:
         else
           echo "CLEANUP_CHANGES=narp" >> $GITHUB_ENV
         fi
-    - name: Set GITHUB_TOKEN from parameter.
-      shell: bash
-      run: |
-         echo "GITHUB_TOKEN=${{ inputs.gitHubToken }}" >> $GITHUB_ENV
     - name: Check if Re-Commit Required
       if: env.CLEANUP_CHANGES == 'yarp'
       shell: bash
       run: |
-        rm git_changes.txt
-        git config --global user.name "Build Action"
-        git config --global user.email "build@letsonboard.com"
+        rm git_changes.txt       
         git commit -am "Automated standards file update."
         git push        
     - name: No Changes

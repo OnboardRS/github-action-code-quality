@@ -30,7 +30,7 @@ runs:
         ls -al ./coding-standards
         cp ./coding-standards/.gitattributes ./.gitattributes -f
         cp ./coding-standards/C#/nuget.config ./nuget.config -f        
-        cp ./coding-standards/C#/.editorconfig ./.editorConfig -f
+        cp ./coding-standards/C#/.editorconfig ./.editorconfig -f
         cp ./coding-standards/C#/.DotSettings ./${{ inputs.solutionPath }}.sln.DotSettings -f
         cp ./coding-standards/C#/localQualityChecks.ps1 ./localQualityChecks.ps1 -f        
         cp ./coding-standards/C#/localQualityChecks.sh ./localQualityChecks.sh -f
@@ -45,7 +45,7 @@ runs:
         ls -al ./coding-standards
         cp ./coding-standards/.gitattributes ./.gitattributes -f
         cp ./coding-standards/C#/nuget.config ./nuget.config -f        
-        cp ./coding-standards/C#/.editorconfig ./.editorConfig -f
+        cp ./coding-standards/C#/.editorconfig ./.editorconfig -f
         cp ./coding-standards/C#/.DotSettings ${{ inputs.solutionPath }}.DotSettings -f
         cp ./coding-standards/C#/localQualityChecks.ps1 ./localQualityChecks.ps1 -f        
         cp ./coding-standards/C#/localQualityChecks.sh ./localQualityChecks.sh -f
@@ -60,7 +60,7 @@ runs:
       run: |
         ./coding-standards/helper-scripts/ensureGitTracked.sh ./nuget.config
         ./coding-standards/helper-scripts/ensureGitTracked.sh ./.gitattributes
-        ./coding-standards/helper-scripts/ensureGitTracked.sh ./.editorConfig
+        ./coding-standards/helper-scripts/ensureGitTracked.sh ./.editorconfig
         ./coding-standards/helper-scripts/ensureGitTracked.sh ${{ inputs.solutionPath }}.DotSettings
         ./coding-standards/helper-scripts/ensureGitTracked.sh ./localQualityChecks.ps1
         ./coding-standards/helper-scripts/ensureGitTracked.sh ./localQualityChecks.sh

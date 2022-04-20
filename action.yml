@@ -22,11 +22,14 @@ runs:
     - name: Copy Standards Files
       shell: bash
       run: |
+        echo pwd
         pwd
+        echo ls -al
         ls -al
+        echo ls -al ./coding-standards
         ls -al ./coding-standards
-        cp ./coding-standards/C#/nuget.config ./nuget.config -f
-        cp ./coding-standards/C#/.gitattributes ./.gitattributes -f
+        cp ./coding-standards/.gitattributes ./.gitattributes -f
+        cp ./coding-standards/C#/nuget.config ./nuget.config -f        
         cp ./coding-standards/C#/.editorconfig ./.editorConfig -f
         cp ./coding-standards/C#/.DotSettings ./${{ inputs.solutionPath }}.sln.DotSettings -f
         cp ./coding-standards/C#/localQualityChecks.ps1 ./localQualityChecks.ps1 -f        

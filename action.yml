@@ -7,7 +7,7 @@ inputs:
   codingStandardsRepo:
     required: true
     description: 'The coding standards repo to copy .editorconfig and DotSettings from.'
-  gitHubToken: 
+  gitHubCheckInToken: 
     required: true
     description: 'The personal access token for github to check in with. Cannot be default PAT or checkin will not occur.'
   gitHubActor: 
@@ -23,7 +23,7 @@ runs:
       uses: actions/checkout@v3
       with:
         repository: ${{ inputs.codingStandardsRepo }}
-        token: ${{ inputs.gitHubToken }}
+        token: ${{ inputs.gitHubCheckInToken }}
         path: ./coding-standards
     - name: Copy Standards Files
       shell: bash
@@ -58,7 +58,7 @@ runs:
     - name: Git Configure
       shell: bash
       run: |
-        echo "GITHUB_TOKEN=${{ inputs.gitHubToken }}" >> $GITHUB_ENV
+        echo "GITHUB_TOKEN=${{ inputs.gitHubCheckInToken }}" >> $GITHUB_ENV
         git config --global user.name "Build Action"
         git config --global user.email "build@letsonboard.com"
     - name: Ensure Files Are Git Tracked

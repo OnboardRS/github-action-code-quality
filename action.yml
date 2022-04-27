@@ -25,106 +25,18 @@ runs:
         repository: ${{ inputs.codingStandardsRepo }}
         token: ${{ inputs.gitHubCheckInToken }}
         path: ./coding-standards
-    - name: Copy Standards Files
-      shell: bash
-      run: |
-        echo pwd
-        pwd
-        echo ls -al
-        ls -al
-        echo ls -al ./coding-standards
-        ls -al ./coding-standards
-        cp ./coding-standards/.gitattributes ./.gitattributes -f
-        cp ./coding-standards/C#/nuget.config ./nuget.config -f        
-        cp ./coding-standards/C#/.editorconfig ./.editorconfig -f
-        cp ./coding-standards/C#/.DotSettings ./${{ inputs.solutionPath }}.sln.DotSettings -f
-        cp ./coding-standards/C#/localQualityChecks.ps1 ./localQualityChecks.ps1 -f        
-        cp ./coding-standards/C#/localQualityChecks.sh ./localQualityChecks.sh -f
-    - name: Copy Standards Files
-      shell: bash
-      run: |
-        echo pwd
-        pwd
-        echo ls -al
-        ls -al
-        echo ls -al ./coding-standards
-        ls -al ./coding-standards
-        cp ./coding-standards/.gitattributes ./.gitattributes -f
-        cp ./coding-standards/C#/nuget.config ./nuget.config -f        
-        cp ./coding-standards/C#/.editorconfig ./.editorconfig -f
-        cp ./coding-standards/C#/.DotSettings ${{ inputs.solutionPath }}.DotSettings -f
-        cp ./coding-standards/C#/localQualityChecks.ps1 ./localQualityChecks.ps1 -f        
-        cp ./coding-standards/C#/localQualityChecks.sh ./localQualityChecks.sh -f
     - name: Git Configure
       shell: bash
       run: |
         echo "GITHUB_TOKEN=${{ inputs.gitHubCheckInToken }}" >> $GITHUB_ENV
         git config --global user.name "Build Action"
         git config --global user.email "build@letsonboard.com"
-    - name: Ensure Files Are Git Tracked
+    - name: Copy And Include Standards Files
       shell: bash
       run: |
-        ./coding-standards/helper-scripts/ensureGitTracked.sh ./nuget.config
-        ./coding-standards/helper-scripts/ensureGitTracked.sh ./.gitattributes
-        ./coding-standards/helper-scripts/ensureGitTracked.sh ./.editorconfig
-        ./coding-standards/helper-scripts/ensureGitTracked.sh ${{ inputs.solutionPath }}.DotSettings
-        ./coding-standards/helper-scripts/ensureGitTracked.sh ./localQualityChecks.ps1
-        ./coding-standards/helper-scripts/ensureGitTracked.sh ./localQualityChecks.sh
+        ./helper-scripts/copyStandardsFiles.sh ./C#/standardsFilesToCopy.txt ${{ inputs.solutionPath }}    
     - name: Ensure Git Ignore Contents
       shell: bash
       run: |
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh 'localQualityCheckResult.xml' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Dd]ebug/' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Dd]ebugPublic/' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Rr]elease/' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Rr]eleases/' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh 'x64/' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh 'x86/' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Aa][Rr][Mm]/' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Aa][Rr][Mm]64/' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh 'bld/' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Bb]in/' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Oo]bj/' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Ll]og/' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '[Ll]ogs/' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '.vs/' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '.vscode/' ./.gitignore 
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '.DotSettings.user' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.rsuser' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.suo' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.user' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.userosscache' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.sln.docstates' ./.gitignore
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '.idea/' ./.gitignore        
-        ./coding-standards/helper-scripts/appendTextToFileIfMissing.sh '*.launchSettings.json' ./.gitignore
-    - name: Check for Modifications
-      shell: bash
-      run: |
-        git status &> git_changes.txt
-    - name: Modification Validation
-      shell: bash
-      run: |
-        if grep -Fq "modified:" git_changes.txt
-        then
-          echo "CLEANUP_CHANGES=yarp" >> $GITHUB_ENV
-        else
-          echo "CLEANUP_CHANGES=narp" >> $GITHUB_ENV
-        fi
-    - name: Check if Re-Commit Required
-      if: env.CLEANUP_CHANGES == 'yarp'
-      shell: bash
-      run: |
-        rm git_changes.txt       
-        git commit -am "Automated standards file update."
-        git push        
-    - name: No Changes
-      if: env.CLEANUP_CHANGES == 'narp'
-      shell: bash
-      run: |
-        echo "No changes detected."
-    - name: SED Nuget Config After Overwrite
-      shell: bash
-      run: |
-        sed -i -e "s/ACTOR/${{ inputs.gitHubActor }}/g" -e "s/TOKEN/${{ inputs.gitHubArtifactToken }}/g" nuget.config 
-        
+        ./helper-scripts/addGitIgnoreEntries.sh .gitignore ./C#/cSharpGItIgnoreEntries.txt        
     

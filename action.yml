@@ -34,9 +34,9 @@ runs:
     - name: Copy And Include Standards Files
       shell: bash
       run: |
-        ./helper-scripts/copyStandardsFiles.sh ./C#/standardsFilesToCopy.txt ${{ inputs.solutionPath }}    
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./C#/standardsFilesToCopy.txt ${{ inputs.solutionPath }}    
     - name: Ensure Git Ignore Contents
       shell: bash
       run: |
-        ./helper-scripts/addGitIgnoreEntries.sh .gitignore ./C#/cSharpGItIgnoreEntries.txt        
+        ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .gitignore .coding-standards/C#/cSharpGItIgnoreEntries.txt        
     

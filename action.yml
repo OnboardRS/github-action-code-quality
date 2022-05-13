@@ -39,33 +39,38 @@ runs:
         echo "GITHUB_TOKEN=${{ inputs.gitHubCheckInToken }}" >> $GITHUB_ENV
         git config --global user.name "Build Action"
         git config --global user.email "build@letsonboard.com"        
+    - name: Config Display
+      shell: bash
+      run: |
+        echo "Apply C# Standards? [applyCSharpStandards] [${{ inputs.applyCSharpStandards }}]"
+        echo "Apply Pulumi Standards? [applyPulumiStandards] [${{ inputs.applyPulumiStandards }}]"
     - name: Copy And Include C Sharp Standards Files
       shell: bash
-      if: ${{ inputs.applyCSharpStandards }} == 'true'
+      if: ${{ inputs.applyCSharpStandards == 'true' }}
       run: |
         echo "Handling C Sharp standards files"
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/solution-root-standards/cSharpStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/github-actions/cSharpActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows 
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/github-actions/cSharpActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/
     - name: Ensure C Sharp Git Ignore Contents
       shell: bash
-      if: ${{ inputs.applyCSharpStandards }} == 'true'
+      if: ${{ inputs.applyCSharpStandards == 'true' }}
       run: |
         ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .gitignore ./coding-standards/c-sharp/solution-root-standards/cSharpGitIgnoreEntries.txt
     - name: Copy And Include Pulumi Standards Files
       shell: bash
-      if: ${{ inputs.applyPulumiStandards }} == 'true'
+      if: ${{ inputs.applyPulumiStandards == 'true' }}
       run: |
         echo "Handling Pulumi standards files"
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/pulumi/solution-root-standards/pulumiGitIgnoreEntries.txt ${{ inputs.solutionPath }} ./
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/pulumi/github-actions/pulumiActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/pulumi/github-actions/pulumiActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/
     - name: Ensure Pulumi Git Ignore Contents
       shell: bash
-      if: ${{ inputs.applyPulumiStandards }} == 'true'
+      if: ${{ inputs.applyPulumiStandards == 'true' }}
       run: |
         ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .gitignore ./coding-standards/pulumi/solution-root-standards/pulumiGitIgnoreEntries.txt          
     - name: Did something run
       shell: bash
-      if: ${{ inputs.applyCSharpStandards }} != 'true' && ${{ inputs.applyPulumiStandards }} != 'true'
+      if: ${{ inputs.applyCSharpStandards!= 'true' && inputs.applyPulumiStandards != 'true' }}
       run: |
         echo "No actions were peformed, check inputs [applyCSharpStandards, applyPulumiStandards] for one to have a string true value."
     

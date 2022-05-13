@@ -41,14 +41,14 @@ runs:
         git config --global user.email "build@letsonboard.com"        
     - name: Copy And Include C Sharp Standards Files
       shell: bash
-      if: ${{ inputs.useCSharpStandards }} == 'true'
+      if: ${{ inputs.applyCSharpStandards }} == 'true'
       run: |
         echo "Handling C Sharp standards files"
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/solution-root-standards/cSharpStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/github-actions/cSharpActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows 
     - name: Ensure C Sharp Git Ignore Contents
       shell: bash
-      if: ${{ inputs.useCSharpStandards }} == 'true'
+      if: ${{ inputs.applyCSharpStandards }} == 'true'
       run: |
         ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .gitignore ./coding-standards/c-sharp/solution-root-standards/cSharpGitIgnoreEntries.txt
     - name: Copy And Include Pulumi Standards Files
@@ -65,7 +65,7 @@ runs:
         ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .gitignore ./coding-standards/pulumi/solution-root-standards/pulumiGitIgnoreEntries.txt          
     - name: Did something run
       shell: bash
-      if: ${{ inputs.useCSharpStandards }} == 'false' && ${{ inputs.applyPulumiStandards }} == 'false'
+      if: ${{ inputs.applyCSharpStandards }} != 'true' && ${{ inputs.applyPulumiStandards }} != 'true'
       run: |
         echo "No actions were peformed, check inputs [applyCSharpStandards, applyPulumiStandards] for one to have a string true value."
     

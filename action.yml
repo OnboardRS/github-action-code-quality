@@ -61,7 +61,7 @@ runs:
       if: ${{ inputs.applyPulumiStandards == 'true' }}
       run: |
         echo "Handling Pulumi standards files"
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/pulumi/solution-root-standards/pulumiGitIgnoreEntries.txt ${{ inputs.solutionPath }} ./
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/pulumi/solution-root-standards/pulumiStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/pulumi/actions/pulumiActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/
     - name: Ensure Pulumi Git Ignore Contents
       shell: bash

@@ -16,6 +16,14 @@ inputs:
   gitHubArtifactToken: 
     required: true
     description: 'The personal access token for github to pull org nuget packages.'
+  applyCSharpStandards: 
+    required: false
+    description: 'If stadards actions should be applied to C Sharp projects.'
+    default: true
+  applyPulumiStandards: 
+    required: false
+    description: 'If stadards actions should be applied to Pulumi projects.'
+    default: false
 runs:
   using: 'composite'
   steps:
@@ -31,12 +39,28 @@ runs:
         echo "GITHUB_TOKEN=${{ inputs.gitHubCheckInToken }}" >> $GITHUB_ENV
         git config --global user.name "Build Action"
         git config --global user.email "build@letsonboard.com"
-    - name: Copy And Include Standards Files
+    - name: Copy And Include C Sharp Standards Files
       shell: bash
+      if: ${{ inputs.useCSharpStandards }}
       run: |
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/C#/standardsFilesToCopy.txt ${{ inputs.solutionPath }}    
-    - name: Ensure Git Ignore Contents
+        echo "Handling C Sharp standards files"
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/solution-root-standards/cSharpStandardsFilesToCopy.txt ${{ inputs.solutionPath }}
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/github-actions/cSharpActionFilesToCopy.txt ${{ inputs.solutionPath }}/.github/workflows
+    - name: Ensure C Sharp Git Ignore Contents
       shell: bash
+      if: ${{ inputs.useCSharpStandards }}
       run: |
-        ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .gitignore ./coding-standards/C#/cSharpGItIgnoreEntries.txt        
+        ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .gitignore ./coding-standards/pulumi/solution-root-standards/cSharpGitIgnoreEntries.txt
+    - name: Copy And Include Pulumi Standards Files
+      shell: bash
+      if: ${{ inputs.applyPulumiStandards }}
+      run: |
+        echo "Handling Pulumi standards files"
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/pulumi/solution-root-standards/pulumiGitIgnoreEntries.txt ${{ inputs.solutionPath }}
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/pulumi/github-actions/pulumiActionFilesToCopy.txt ${{ inputs.solutionPath }}/.github/workflows
+    - name: Ensure Pulumi Git Ignore Contents
+      shell: bash
+      if: ${{ inputs.applyPulumiStandards }}
+      run: |
+        ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .gitignore ./coding-standards/pulumi/solution-root-standards/pulumiGitIgnoreEntries.txt          
     

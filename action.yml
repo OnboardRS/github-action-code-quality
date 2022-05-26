@@ -53,8 +53,8 @@ runs:
       if: ${{ inputs.applyCSharpStandards == 'true' }}
       run: |
         echo "Handling C Sharp standards files"
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/solution-root-standards/cSharpStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/actions/cSharpActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/solution-root-standards/cSharpStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./ ${{ inputs.toDoIssueLabelsCsv }}
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/actions/cSharpActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/ ${{ inputs.toDoIssueLabelsCsv }}
     - name: Ensure C Sharp Git Ignore Contents
       shell: bash
       if: ${{ inputs.applyCSharpStandards == 'true' }}
@@ -65,8 +65,8 @@ runs:
       if: ${{ inputs.applyPulumiStandards == 'true' }}
       run: |
         echo "Handling Pulumi standards files"
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/pulumi/solution-root-standards/pulumiStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/pulumi/actions/pulumiActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/pulumi/solution-root-standards/pulumiStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./ ${{ inputs.toDoIssueLabelsCsv }}
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/pulumi/actions/pulumiActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/ ${{ inputs.toDoIssueLabelsCsv }}
     - name: Ensure Pulumi Git Ignore Contents
       shell: bash
       if: ${{ inputs.applyPulumiStandards == 'true' }}

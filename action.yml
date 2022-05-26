@@ -24,6 +24,10 @@ inputs:
     required: false
     description: 'If stadards actions should be applied to Pulumi projects.'
     default: 'false'
+  toDoIssueLabelsCsv: 
+    required: false
+    description: 'The label(s) to apply to GitHub issues created by TODO as csv.'
+    default: 'false'
 runs:
   using: 'composite'
   steps:
@@ -51,6 +55,9 @@ runs:
         echo "Handling C Sharp standards files"
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/solution-root-standards/cSharpStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/actions/cSharpActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/
+    - name: Replace Labels For TODO Handler
+      shell: bash
+      run: sed -i -e "s/inputs.LABELS/inputs.toDoIssueLabelsCsv/g" ./.github/workflows/todo-issues.yml
     - name: Ensure C Sharp Git Ignore Contents
       shell: bash
       if: ${{ inputs.applyCSharpStandards == 'true' }}

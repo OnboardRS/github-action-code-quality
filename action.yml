@@ -55,9 +55,6 @@ runs:
         echo "Handling C Sharp standards files"
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/solution-root-standards/cSharpStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/actions/cSharpActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/
-    - name: Replace Labels For TODO Handler
-      shell: bash
-      run: sed -i -e "s/inputs.LABELS/inputs.toDoIssueLabelsCsv/g" .github/workflows/todo-issues.yml
     - name: Ensure C Sharp Git Ignore Contents
       shell: bash
       if: ${{ inputs.applyCSharpStandards == 'true' }}

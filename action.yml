@@ -29,11 +29,6 @@ inputs:
     description: 'The label(s) to apply to GitHub issues created by TODO as csv.'
     default: 'false'
 runs:
-  on:
-    push:
-      branches:
-        - develop
-        - 'feature/**'
   using: 'composite'
   steps:
     - name: Checkout Coding Standards

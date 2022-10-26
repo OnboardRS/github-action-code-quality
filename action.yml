@@ -18,11 +18,15 @@ inputs:
     description: 'The personal access token for github to pull org nuget packages.'
   applyCSharpStandards: 
     required: false
-    description: 'If stadards actions should be applied to C Sharp projects.'
+    description: 'If standards actions should be applied to C Sharp projects.'
     default: 'false'
   applyPulumiStandards: 
     required: false
-    description: 'If stadards actions should be applied to Pulumi projects.'
+    description: 'If standards actions should be applied to Pulumi projects.'
+    default: 'false'
+  applyUIStandards:
+    required: false
+    description: 'If standards actions should be applied to UI projects.'
     default: 'false'
   toDoIssueLabelsCsv: 
     required: false
@@ -48,6 +52,7 @@ runs:
       run: |
         echo "Apply C# Standards? [applyCSharpStandards] [${{ inputs.applyCSharpStandards }}]"
         echo "Apply Pulumi Standards? [applyPulumiStandards] [${{ inputs.applyPulumiStandards }}]"
+        echo "Apply UI Standards? [applyUIStandards] [${{ inputs.applyUIStandards }}]"
     - name: Copy And Include C Sharp Standards Files
       shell: bash
       if: ${{ inputs.applyCSharpStandards == 'true' }}
@@ -72,9 +77,24 @@ runs:
       if: ${{ inputs.applyPulumiStandards == 'true' }}
       run: |
         ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .gitignore ./coding-standards/pulumi/solution-root-standards/pulumiGitIgnoreEntries.txt          
+    - name: Copy and Include UI Standards Files
+      shell: bash
+      if: ${{ inputs.applyUIStandards == 'true' }}
+      run: |
+        echo "Handling UI standards files"
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/solution-root-standards/uiStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./ ${{ inputs.toDoIssueLabelsCsv }}
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/actions/uiActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/ ${{ inputs.toDoIssueLabelsCsv }}
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/actions/uiGitHooksToCopy.txt ${{ inputs.solutionPath }} ./.git/hooks/ ${{ inputs.toDoIssueLabelsCsv }}
+    - name: Ensure UI Git Ignore, Prettier Ignore, and ESLint Ignore Contents
+      shell: bash
+      if: ${{ inputs.applyUIStandards == 'true' }}
+      run: |s
+        ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .gitignore ./coding-standards/ui/solution-root-standards/uiGitIgnoreEntries.txt
+        ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .prettierignore ./coding-standards/ui/solution-root-standards/uiPrettierIgnoreEntries.txt
+        ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .eslintignore ./coding-standards/ui/solution-root-standards/uiEslintIgnoreEntries.txt
     - name: Did something run
       shell: bash
-      if: ${{ inputs.applyCSharpStandards!= 'true' && inputs.applyPulumiStandards != 'true' }}
+      if: ${{ inputs.applyCSharpStandards != 'true' && inputs.applyPulumiStandards != 'true' && inputs.applyUIStandards != 'true' }}
       run: |
-        echo "No actions were peformed, check inputs [applyCSharpStandards, applyPulumiStandards] for one to have a string true value."
+        echo "No actions were peformed, check inputs [applyCSharpStandards, applyPulumiStandards, applyUIStandards] for one to have a string true value."
     

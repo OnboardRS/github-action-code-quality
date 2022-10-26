@@ -88,7 +88,7 @@ runs:
     - name: Ensure UI Git Ignore, Prettier Ignore, and ESLint Ignore Contents
       shell: bash
       if: ${{ inputs.applyUIStandards == 'true' }}
-      run: |s
+      run: |
         ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .gitignore ./coding-standards/ui/solution-root-standards/uiGitIgnoreEntries.txt
         ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .prettierignore ./coding-standards/ui/solution-root-standards/uiPrettierIgnoreEntries.txt
         ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .eslintignore ./coding-standards/ui/solution-root-standards/uiEslintIgnoreEntries.txt

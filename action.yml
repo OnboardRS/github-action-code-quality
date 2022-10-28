@@ -84,7 +84,7 @@ runs:
         echo "Handling UI standards files"
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/solution-root-standards/uiStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./ ${{ inputs.toDoIssueLabelsCsv }}
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/actions/uiActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/ ${{ inputs.toDoIssueLabelsCsv }}
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/actions/uiGitHooksToCopy.txt ${{ inputs.solutionPath }} ./.git/hooks/ ${{ inputs.toDoIssueLabelsCsv }}
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/git-hooks/uiGitHooksToCopy.txt ${{ inputs.solutionPath }} ./.git/hooks/ ${{ inputs.toDoIssueLabelsCsv }}
     - name: Ensure UI Git Ignore, Prettier Ignore, and ESLint Ignore Contents
       shell: bash
       if: ${{ inputs.applyUIStandards == 'true' }}

@@ -76,7 +76,12 @@ runs:
       shell: bash
       if: ${{ inputs.applyPulumiStandards == 'true' }}
       run: |
-        ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .gitignore ./coding-standards/pulumi/solution-root-standards/pulumiGitIgnoreEntries.txt          
+        ./coding-standards/helper-scripts/addGitIgnoreEntries.sh .gitignore ./coding-standards/pulumi/solution-root-standards/pulumiGitIgnoreEntries.txt
+    - name: test
+      shell: bash
+      run: |
+        cd ./coding-standards/ui/git-hooks
+        ls -alp
     - name: Copy and Include UI Standards Files
       shell: bash
       if: ${{ inputs.applyUIStandards == 'true' }}

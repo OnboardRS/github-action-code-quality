@@ -84,7 +84,9 @@ runs:
         echo "Handling UI standards files"
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/solution-root-standards/uiStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./ ${{ inputs.toDoIssueLabelsCsv }}
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/actions/uiActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/ ${{ inputs.toDoIssueLabelsCsv }}
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/git-hooks/uiGitHooksToCopy.txt ${{ inputs.solutionPath }} ./.git-hooks/ ${{ inputs.toDoIssueLabelsCsv }}
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/git-hooks/uiHookRootFilesToCopy.txt ${{ inputs.solutionPath }} ./.coding-standards/ ${{ inputs.toDoIssueLabelsCsv }}
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/git-hooks/uiHookFilesToCopy.txt ${{ inputs.solutionPath }} ./.coding-standards/hooks/ ${{ inputs.toDoIssueLabelsCsv }}
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/git-hooks/uiHuskyEntryFilesToCopy.txt ${{ inputs.solutionPath }} ./.coding-standards/husky-entries/ ${{ inputs.toDoIssueLabelsCsv }}
     - name: Standardize UI Package Json
       shell: bash
       if: ${{ inputs.applyUIStandards == 'true' }}

@@ -82,16 +82,11 @@ runs:
       if: ${{ inputs.applyUIStandards == 'true' }}
       run: |
         echo "Handling UI standards files"
-        chmod 777 ./coding-standards/ui/solution-root-standards/setup-hooks.js
-        chmod 777 ./coding-standards/ui/solution-root-standards/lint-staged-changes
-        ls -alp ./coding-standards
-        ls -alp ./coding-standards/ui
-        ls -alp ./coding-standards/ui/solution-root-standards
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/solution-root-standards/uiStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./ ${{ inputs.toDoIssueLabelsCsv }}
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/actions/uiActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/ ${{ inputs.toDoIssueLabelsCsv }}
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/solution-root-standards/uiHookRootFilesToCopy.txt ${{ inputs.solutionPath }} ./.standards/ ${{ inputs.toDoIssueLabelsCsv }}
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/solution-root-standards/uiHookFilesToCopy.txt ${{ inputs.solutionPath }} ./.standards/hooks/ ${{ inputs.toDoIssueLabelsCsv }}
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/solution-root-standards/uiHuskyEntryFilesToCopy.txt ${{ inputs.solutionPath }} ./.standards/husky-entries/ ${{ inputs.toDoIssueLabelsCsv }}
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/setup-scripts/uiSetupScriptFilesToCopy.txt ${{ inputs.solutionPath }} ./.standards/ ${{ inputs.toDoIssueLabelsCsv }}
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/hooks/uiHookFilesToCopy.txt ${{ inputs.solutionPath }} ./.standards/hooks/ ${{ inputs.toDoIssueLabelsCsv }}
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/husky-entries/uiHuskyEntryFilesToCopy.txt ${{ inputs.solutionPath }} ./.standards/husky-entries/ ${{ inputs.toDoIssueLabelsCsv }}
     - name: Standardize UI Package Json
       shell: bash
       if: ${{ inputs.applyUIStandards == 'true' }}

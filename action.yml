@@ -82,6 +82,7 @@ runs:
       if: ${{ inputs.applyUIStandards == 'true' }}
       run: |
         echo "Handling UI standards files"
+        chmod u+r ./coding-standards/ui/solution-root-standards
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/solution-root-standards/uiStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./ ${{ inputs.toDoIssueLabelsCsv }}
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/actions/uiActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/ ${{ inputs.toDoIssueLabelsCsv }}
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/solution-root-standards/uiHookRootFilesToCopy.txt ${{ inputs.solutionPath }} ./.standards/ ${{ inputs.toDoIssueLabelsCsv }}

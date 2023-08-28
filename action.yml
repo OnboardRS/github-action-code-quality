@@ -82,7 +82,6 @@ runs:
       if: ${{ inputs.applyUIStandards == 'true' }}
       run: |
         echo "Handling UI standards files"
-        chmod u+r ./coding-standards/ui/solution-root-standards
         ls -alp ./coding-standards
         ls -alp ./coding-standards/ui
         ls -alp ./coding-standards/ui/solution-root-standards

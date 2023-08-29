@@ -84,26 +84,8 @@ runs:
         echo "Handling UI standards files"
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/solution-root-standards/uiStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./ ${{ inputs.toDoIssueLabelsCsv }}
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/actions/uiActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/ ${{ inputs.toDoIssueLabelsCsv }}
-#        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/setup-scripts/uiSetupScriptFilesToCopy.txt ${{ inputs.solutionPath }} ./.standards/ ${{ inputs.toDoIssueLabelsCsv }}
-#        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/hooks/uiHookFilesToCopy.txt ${{ inputs.solutionPath }} ./.standards/hooks/ ${{ inputs.toDoIssueLabelsCsv }}
-#        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/husky-entries/uiHuskyEntryFilesToCopy.txt ${{ inputs.solutionPath }} ./.standards/husky-entries/ ${{ inputs.toDoIssueLabelsCsv }}
-    - name: Copy and Include UI Setup Scripts
-      shell: bash
-      if: ${{ inputs.applyUIStandards == 'true' }}
-      run: |
-        echo "Handling UI setup script files"
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/setup-scripts/uiSetupScriptFilesToCopy.txt ${{ inputs.solutionPath }} ./.standards/ ${{ inputs.toDoIssueLabelsCsv }}
-    - name: Copy and Include UI Hook Scripts
-      shell: bash
-      if: ${{ inputs.applyUIStandards == 'true' }}
-      run: |
-        echo "Handling UI hook files"
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/hooks/uiHookFilesToCopy.txt ${{ inputs.solutionPath }} ./.standards/hooks/ ${{ inputs.toDoIssueLabelsCsv }}
-    - name: Copy and Include UI Husky Entry Scripts
-      shell: bash
-      if: ${{ inputs.applyUIStandards == 'true' }}
-      run: |
-        echo "Handling UI husky entry files"
         ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/husky-entries/uiHuskyEntryFilesToCopy.txt ${{ inputs.solutionPath }} ./.standards/husky-entries/ ${{ inputs.toDoIssueLabelsCsv }}
     - name: Standardize UI Package Json
       shell: bash

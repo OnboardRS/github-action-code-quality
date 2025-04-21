@@ -30,13 +30,12 @@ inputs:
     default: 'false'
   toDoIssueLabelsCsv: 
     required: false
-    description: 'The label(s) to apply to GitHub issues created by TODO as csv.'
-    default: 'false'
+    description: 'DEPRECATED: The label(s) to apply to GitHub issues created by TODO as csv.'
 runs:
   using: 'composite'
   steps:
     - name: Checkout Coding Standards
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: ${{ inputs.codingStandardsRepo }}
         token: ${{ inputs.gitHubCheckInToken }}
@@ -58,8 +57,8 @@ runs:
       if: ${{ inputs.applyCSharpStandards == 'true' }}
       run: |
         echo "Handling C Sharp standards files"
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/solution-root-standards/cSharpStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./ ${{ inputs.toDoIssueLabelsCsv }}
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/actions/cSharpActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/ ${{ inputs.toDoIssueLabelsCsv }}
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/solution-root-standards/cSharpStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/c-sharp/actions/cSharpActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/
     - name: Ensure C Sharp Git Ignore Contents
       shell: bash
       if: ${{ inputs.applyCSharpStandards == 'true' }}
@@ -70,8 +69,8 @@ runs:
       if: ${{ inputs.applyPulumiStandards == 'true' }}
       run: |
         echo "Handling Pulumi standards files"
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/pulumi/solution-root-standards/pulumiStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./ ${{ inputs.toDoIssueLabelsCsv }}
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/pulumi/actions/pulumiActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/ ${{ inputs.toDoIssueLabelsCsv }}
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/pulumi/solution-root-standards/pulumiStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/pulumi/actions/pulumiActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/
     - name: Ensure Pulumi Git Ignore Contents
       shell: bash
       if: ${{ inputs.applyPulumiStandards == 'true' }}
@@ -82,11 +81,11 @@ runs:
       if: ${{ inputs.applyUIStandards == 'true' }}
       run: |
         echo "Handling UI standards files"
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/solution-root-standards/uiStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./ ${{ inputs.toDoIssueLabelsCsv }}
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/actions/uiActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/ ${{ inputs.toDoIssueLabelsCsv }}
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/setup-scripts/uiSetupScriptFilesToCopy.txt ${{ inputs.solutionPath }} ./.coding-standards/ ${{ inputs.toDoIssueLabelsCsv }}
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/hooks/uiHookFilesToCopy.txt ${{ inputs.solutionPath }} ./.coding-standards/hooks/ ${{ inputs.toDoIssueLabelsCsv }}
-        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/husky-entries/uiHuskyEntryFilesToCopy.txt ${{ inputs.solutionPath }} ./.coding-standards/husky-entries/ ${{ inputs.toDoIssueLabelsCsv }}
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/solution-root-standards/uiStandardsFilesToCopy.txt ${{ inputs.solutionPath }} ./
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/actions/uiActionFilesToCopy.txt ${{ inputs.solutionPath }} ./.github/workflows/
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/setup-scripts/uiSetupScriptFilesToCopy.txt ${{ inputs.solutionPath }} ./.coding-standards/
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/hooks/uiHookFilesToCopy.txt ${{ inputs.solutionPath }} ./.coding-standards/hooks/
+        ./coding-standards/helper-scripts/copyStandardsFiles.sh ./coding-standards/ui/husky-entries/uiHuskyEntryFilesToCopy.txt ${{ inputs.solutionPath }} ./.coding-standards/husky-entries/
     - name: Standardize UI Package Json
       shell: bash
       if: ${{ inputs.applyUIStandards == 'true' }}
